@@ -1,6 +1,6 @@
 import os
 from datetime import timedelta
-
+from files import get_base_path
 
 def num_holidays(year, week):
     file_name = get_file_name(year)
@@ -19,4 +19,4 @@ def weekly_and_holidays(year, week):
 
 
 def get_file_name(year):
-    return "{0}/{1}/holidays".format(os.path.dirname(__file__), year)
+    return "{0}/{1}/holidays".format(get_base_path(), year)
