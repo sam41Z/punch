@@ -2,38 +2,46 @@ from datetime import datetime, timedelta
 from files import get_file_path_by_yw, parse_path
 from holidays import num_holidays, weekly_and_holidays
 from hours import calc_hours, timedelta_string
+from rich.table import Table
+from rich import print, box
+from rich.console import Group
+from rich.panel import Panel
+from rich.text import Text
 
 
 def overtime(arg_week):
+    width = 50
+
     date = datetime.today()
-    current_year = date.strftime("%Y")
+    year = date.strftime("%Y")
     current_week = int(date.strftime("%U"))
 
-    if arg_week:
-        weeks = range(arg_week, current_week)
-        files = set()
-        for week in weeks:
-            files.add(get_file_path_by_yw(current_year, week))
-    else:
-        files = parse_path([current_year])
+    weeks = range(arg_week, current_week)
+    total = timedelta()
 
-    summa = timedelta()
+    weekly_ot = Table(expand=True, box=box.ROUNDED, width=width, style="gold1")
+    weekly_ot.add_column("Week")
+    weekly_ot.add_column("Overtime")
     for week in weeks:
-        file = get_file_path_by_yw(current_year, week)
-        required, holidays = weekly_and_holidays(current_year, week)
-        debt = calc_hours(file) - required
-        summa = summa + debt
+        file_name = get_file_path_by_yw(year, week)
+        summa = calc_hours(filename=file_name)
+        required, week_holidays, = weekly_and_holidays(year, week)
+        ot = summa - required
+        total = total + ot
 
-    out = "Total overtime: {}".format(timedelta_string(summa))
-    info = "Week {} to {}".format(min(weeks), max(weeks))
+        if ot < timedelta():
+            style = "deep_pink2"
+        elif ot > timedelta():
+            style = "spring_green1"
+        else:
+            style = ""
 
-    sep = ""
-    for i in range(len(out)):
-        sep = sep + "#"
-    print(sep)
-    print()
-    print(out)
-    print()
-    print(info)
-    print()
-    print(sep)
+        weekly_ot.add_row("{}".format(week), Text(timedelta_string(ot), style=style))
+
+    summary = Group(
+        weekly_ot,
+        Panel(timedelta_string(total), title="Total Overtime", title_align="left", width=width, style="deep_sky_blue1"),
+    )
+
+    print(Panel(summary, title=":stopwatch:  Overtime from week {} to {} in {}".format(arg_week, current_week, year),
+                title_align="left", expand=False))
