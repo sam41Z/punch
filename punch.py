@@ -35,7 +35,7 @@ def arguments_hours(parser):
 
 
 def arguments_overtime(parser):
-    add_week_argument(parser)
+    parser.add_argument('week', type=int, choices=range(1, 52), metavar="[1-52]", help="Start week number (1-52)")
 
 
 def parse_args():
