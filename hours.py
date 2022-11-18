@@ -1,6 +1,5 @@
 import math
 from datetime import datetime, timedelta
-
 from rich import print, box
 from rich.panel import Panel
 from rich.style import Style
@@ -8,10 +7,8 @@ from rich.table import Table
 from rich.console import Group
 from rich.progress import Progress, TextColumn, BarColumn, TaskProgressColumn
 from rich.text import Text
-
 from files import get_file_path_by_yw
 from holidays import num_holidays, weekly_and_holidays
-
 from time import sleep
 
 
@@ -63,7 +60,10 @@ def logs(file_name, width):
     logs.add_column("Duration")
     for line in file.readlines():
         columns = line.strip().split(" ")
-        logs.add_row(columns[0], ''.join(columns[1:4]), columns[4])
+        if columns[1] == '🤒':
+            logs.add_row(columns[0], columns[1], columns[2])
+        else:
+            logs.add_row(columns[0], ''.join(columns[1:4]), columns[4])
     return logs
 
 
@@ -80,7 +80,6 @@ def hours(arg_year, arg_week):
         week = int(date.strftime("%U"))
 
     file_name = get_file_path_by_yw(year, week)
-
     summa = calc_hours(filename=file_name)
 
     try:
