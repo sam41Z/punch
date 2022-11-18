@@ -34,22 +34,24 @@ def timedelta_string(delta):
     minutes = int(math.fmod(total_minutes, 60))
     hours = int(total_minutes / 60)
 
+    signed_minutes = minutes if delta < timedelta() and hours == 0 else abs(minutes)
     out = "{} hours".format(hours)
 
     if minutes != 0:
-        out = out + ", {} minutes".format(abs(minutes))
+        out = out + ", {} minutes".format(signed_minutes)
 
     return out
 
 
 def timedelta_string_short(delta):
     days, seconds = delta.days, delta.seconds
-
     total_minutes = days * 24 * 60 + seconds // 60
     minutes = int(math.fmod(total_minutes, 60))
     hours = int(total_minutes / 60)
 
-    return "{: 5}h {: 3}m".format(hours, abs(minutes))
+    signed_minutes = minutes if delta < timedelta() and hours == 0 else abs(minutes)
+
+    return "{: 5}h {: 3}m".format(hours, signed_minutes)
 
 
 def logs(file_name, width):
