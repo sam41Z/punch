@@ -6,14 +6,19 @@ from rich.panel import Panel
 from hours import logs
 
 
-def remove(arg_num):
+def remove(arg_offset, arg_num):
     date_time = datetime.today()
     filename = get_file_path_by_date(date_time.date())
     with open(filename, 'r+') as file:
         lines = file.readlines()
         file.seek(0)
         file.truncate()
-        file.writelines(lines[:-arg_num])
+        r_start = max(arg_offset, arg_num)
+        new_lines = lines[:-r_start]
+        if arg_offset > arg_num:
+            new_lines = new_lines + lines[-(arg_offset-arg_num):]
+        print(new_lines)
+        file.writelines(new_lines)
 
     width = 50
     info = Group(
