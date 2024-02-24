@@ -6,7 +6,10 @@ from rich.console import Group
 from rich.panel import Panel
 
 from files import get_file_path_by_date
-from hours import logs
+from hours import logs_db
+
+from repository import create_record
+from model import TimeRecord
 
 
 def day_prefix(arg_date, arg_prefix):
@@ -22,29 +25,26 @@ def day_prefix(arg_date, arg_prefix):
     return day, prefix
 
 
-def add(arg_date, arg_time, arg_prefix, arg_index):
+def add(arg_date, arg_time, arg_prefix):
     day, prefix = day_prefix(arg_date, arg_prefix)
 
     start_time, end_time = arg_time
     start = datetime.combine(day, start_time)
     end = datetime.combine(day, end_time)
 
-    if end < start:
-        msg = "End time ({}) is before start time ({})".format(end.strftime("%H:%M"), start.strftime("%H:%M"))
-        raise argparse.ArgumentTypeError(msg)
-    delta = end - start
-
-    entry = '{} {} - {} {}'.format(prefix, start.strftime("%H:%M"), end.strftime("%H:%M"),
-                                   ':'.join(str(delta).split(':')[:2]))
-    filename = write(day, entry, arg_index)
-    print_info(entry, filename)
+    new_record = TimeRecord(start, end)
+    create_record(new_record)
+    print_info(new_record)
 
 
-def print_info(entry, filename):
+def print_info(new_record: TimeRecord):
+    year = new_record.started_at.year
+    week = new_record.started_at.isocalendar().week
+    entry = new_record.str_day() + " " + new_record.str_time() + " " + new_record.str_duration()
     width = 50
     info = Group(
         Panel(entry, title="Added to file", width=width, title_align="left", style="spring_green1"),
-        logs(filename, width)
+        logs_db(year, week, width)
     )
     print()
     print(Panel(info, title=":chart_increasing:", title_align="left", expand=False))
