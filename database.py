@@ -2,9 +2,9 @@ from datetime import datetime
 from sqlalchemy import create_engine
 from sqlalchemy import TIMESTAMP
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
-from files import get_base_path
+from os.path import expanduser
 
-url = "sqlite:///" + get_base_path() + "/db.db"
+url = "sqlite:///" + expanduser("~/.config/punch") + "/db.db"
 print(url)
 engine = create_engine(url, echo=True)
 Session = sessionmaker(engine)
