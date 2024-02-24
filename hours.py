@@ -1,15 +1,15 @@
 import math
 from datetime import datetime, timedelta
+
 from rich import print, box
+from rich.console import Group
 from rich.panel import Panel
+from rich.progress import Progress, BarColumn, TaskProgressColumn
 from rich.style import Style
 from rich.table import Table
-from rich.console import Group
-from rich.progress import Progress, TextColumn, BarColumn, TaskProgressColumn
-from rich.text import Text
+
 from files import get_file_path_by_yw
-from holidays import num_holidays, weekly_and_holidays
-from time import sleep
+from holidays import weekly_and_holidays
 
 
 def calc_hours(filename):
@@ -27,14 +27,17 @@ def calc_hours(filename):
         return count
 
 
-def timedelta_string(delta):
+def split_delta(delta):
     days, seconds = delta.days, delta.seconds
-
     total_minutes = days * 24 * 60 + seconds // 60
     minutes = int(math.fmod(total_minutes, 60))
     hours = int(total_minutes / 60)
-
     signed_minutes = minutes if delta < timedelta() and hours == 0 else abs(minutes)
+    return hours, minutes, signed_minutes
+
+
+def timedelta_string(delta):
+    hours, minutes, signed_minutes = split_delta(delta)
     out = "{} hours".format(hours)
 
     if minutes != 0:
@@ -44,13 +47,8 @@ def timedelta_string(delta):
 
 
 def timedelta_string_short(delta):
-    days, seconds = delta.days, delta.seconds
-    total_minutes = days * 24 * 60 + seconds // 60
-    minutes = int(math.fmod(total_minutes, 60))
-    hours = int(total_minutes / 60)
-
+    hours, minutes, signed_minutes = split_delta(delta)
     signed_minutes = minutes if delta < timedelta() and hours == 0 else abs(minutes)
-
     return "{: 5}h {: 3}m".format(hours, signed_minutes)
 
 

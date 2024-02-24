@@ -1,8 +1,10 @@
 from datetime import datetime
-from files import get_file_path_by_date
+
 from rich import print
 from rich.console import Group
 from rich.panel import Panel
+
+from files import get_file_path_by_date
 from hours import logs
 
 
@@ -16,12 +18,12 @@ def remove(arg_offset, arg_num):
         r_start = max(arg_offset, arg_num)
         new_lines = lines[:-r_start]
         if arg_offset > arg_num:
-            new_lines = new_lines + lines[-(arg_offset-arg_num):]
+            new_lines = new_lines + lines[-(arg_offset - arg_num):]
         file.writelines(new_lines)
 
     width = 50
     info = Group(
-        Panel("Removed {} lines".format(arg_num),  width=width, style="deep_pink2"),
+        Panel("Removed {} lines".format(arg_num), width=width, style="deep_pink2"),
         logs(filename, width)
     )
     print()

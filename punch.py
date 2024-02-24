@@ -2,11 +2,12 @@
 
 import argparse
 
-from datetime_parser import parse_time_span, parse_date
 from add import add, add_sick
+from datetime_parser import parse_time_span, parse_date
 from hours import hours
 from overtime import overtime
 from remove import remove
+
 
 def add_year_argument(parser):
     parser.add_argument('-y', '--year', type=int, choices=range(2021, 3000), metavar="2021+",
@@ -37,7 +38,6 @@ def arguments_sick(parser):
 def arguments_remove(parser):
     parser.add_argument('-n', '--num', type=int, default=1, help='Number of lines to remove from the end')
     parser.add_argument('-o', '--offset', type=int, default=1, help='Number of lines to skip removing')
-
 
 
 def arguments_hours(parser):
@@ -74,4 +74,3 @@ if __name__ == '__main__':
         hours(args.year, args.week)
     elif args.operation == 'overtime':
         overtime(args.week)
-

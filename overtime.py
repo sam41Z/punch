@@ -1,12 +1,14 @@
 from datetime import datetime, timedelta
-from files import get_file_path_by_yw, parse_path
-from holidays import num_holidays, weekly_and_holidays
-from hours import calc_hours, timedelta_string, timedelta_string_short
-from rich.table import Table
+
 from rich import print, box
 from rich.console import Group
 from rich.panel import Panel
+from rich.table import Table
 from rich.text import Text
+
+from files import get_file_path_by_yw
+from holidays import weekly_and_holidays
+from hours import calc_hours, timedelta_string, timedelta_string_short
 
 
 def overtime(arg_week):
@@ -29,10 +31,8 @@ def overtime(arg_week):
         ot = summa - required
         total = total + ot
 
-        prefix = " "
         if ot < timedelta():
             style = "deep_pink2"
-            prefix = ""
         elif ot > timedelta():
             style = "spring_green1"
         else:

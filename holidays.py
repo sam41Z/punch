@@ -2,6 +2,7 @@ import os
 from datetime import timedelta
 from files import get_base_path
 
+
 def num_holidays(year, week):
     file_name = get_file_name(year)
     file = open(file_name, 'r')

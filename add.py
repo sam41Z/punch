@@ -1,9 +1,10 @@
 import argparse
-import os
 from datetime import datetime, date, timedelta
+
 from rich import print
 from rich.console import Group
 from rich.panel import Panel
+
 from files import get_file_path_by_date
 from hours import logs
 
@@ -19,6 +20,7 @@ def day_prefix(arg_date, arg_prefix):
     else:
         prefix = day.strftime("%a")
     return day, prefix
+
 
 def add(arg_date, arg_time, arg_prefix, arg_index):
     day, prefix = day_prefix(arg_date, arg_prefix)
