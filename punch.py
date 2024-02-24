@@ -51,4 +51,4 @@ if __name__ == '__main__':
         today = date.today()
         hours(today.year, today.isocalendar().week)
     elif args.operation == 'migrate':
-        migrate.Migration(Repository.test()).migrate(args.year)
+        migrate.Migration(Repository()).migrate(args.year)
