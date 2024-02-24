@@ -1,4 +1,3 @@
-import argparse
 from datetime import datetime
 
 
@@ -10,8 +9,8 @@ def parse_time(s):
     try:
         return datetime.strptime(s, "%H").time()
     except ValueError:
-        msg = "not a valid time: {0!r}".format(s)
-        raise argparse.ArgumentTypeError(msg)
+        msg = "Not a valid time: {0!r}".format(s)
+        raise ValueError(msg)
 
 
 def parse_time_span(s):
@@ -23,8 +22,8 @@ def parse_time_span(s):
         end = times[1]
         return parse_time(start), parse_time(end)
     except ValueError:
-        msg = "not a valid time span: {0!r}".format(s)
-        raise argparse.ArgumentTypeError(msg)
+        msg = "Not a valid time span: {0!r}".format(s)
+        raise ValueError(msg)
 
 
 def parse_date(s):
@@ -32,4 +31,4 @@ def parse_date(s):
         return datetime.strptime(s, "%Y-%m-%d")
     except ValueError:
         msg = "not a valid date: {0!r}".format(s)
-        raise argparse.ArgumentTypeError(msg)
+        raise ValueError(msg)

@@ -83,6 +83,14 @@ def print_with_new(new_record, records):
     print(Panel(info, title=":chart_increasing:", title_align="left", expand=False))
 
 
+def print_success(content: str):
+    print(Panel(content, width=width, title_align="left", style="spring_green1"))
+
+
+def print_error(content: str):
+    print(Panel(content, width=width, title_align="left", style="deep_pink2"))
+
+
 def timedelta_string(delta) -> str:
     hours, minutes, signed_minutes = split_delta(delta)
     out = "{} hours".format(hours)
