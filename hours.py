@@ -1,5 +1,6 @@
 import math, repository
 from datetime import datetime, timedelta, date, time
+from functools import reduce
 
 from rich import print, box
 from rich.console import Group
@@ -8,23 +9,13 @@ from rich.progress import Progress, BarColumn, TaskProgressColumn
 from rich.style import Style
 from rich.table import Table
 
-from files import get_file_path_by_yw
 from holidays import weekly_and_holidays
+import repository
 
 
-def calc_hours(filename):
-    count = timedelta()
-    try:
-        with open(filename) as file:
-            for line in file:
-                chunks = line.split(' ')
-                s = chunks[len(chunks) - 1]
-                time = datetime.strptime(s, "%H:%M\n").time()
-                delta = timedelta(hours=time.hour, minutes=time.minute)
-                count += delta
-            file.close()
-    finally:
-        return count
+def calc_hours(year: int, week: int) -> timedelta:
+    records = repository.get_by_year_and_week(year, week)
+    return reduce(lambda x, y: x + y, map(lambda record: record.duration(), records))
 
 
 def split_delta(delta):
@@ -67,64 +58,49 @@ def logs(file_name, width):
     return logs
 
 
-def logs_db(year: int, week: int, width):
-    range_start = datetime.combine(date.fromisocalendar(year, week, 1), time(0))
-    range_end = datetime.combine(date.fromisocalendar(year, week, 7), time(23, 59))
-    records = repository.get_range(range_start, range_end)
-    logs = Table(expand=True, box=box.ROUNDED, width=width, style="gold1")
-    logs.add_column("Day")
-    logs.add_column("Time")
-    logs.add_column("Duration")
+def get_record_table(year: int, week: int, width) -> Table:
+    records = repository.get_by_year_and_week(year, week)
+    table = Table(expand=True, box=box.ROUNDED, width=width, style="gold1")
+    table.add_column("Day")
+    table.add_column("Time")
+    table.add_column("Duration")
     for record in records:
-        logs.add_row(record.str_day(), record.str_time(), record.str_duration())
-    return logs
+        table.add_row(record.str_day(), record.str_time(), record.str_duration())
+    return table
 
 
 def hours(arg_year, arg_week):
-    date = datetime.today()
-    if arg_year:
-        year = arg_year
-    else:
-        year = date.strftime("%Y")
+    today = datetime.today()
+    year = arg_year if arg_year else today.year
+    week = arg_week if arg_week else today.isocalendar().week
 
-    if arg_week:
-        week = arg_week
-    else:
-        week = date.isocalendar().week
+    summa = calc_hours(year, week)
 
-    file_name = get_file_path_by_yw(year, week)
-    summa = calc_hours(filename=file_name)
+    width = 50
+    record_table = get_record_table(year, week, width)
 
-    try:
-        width = 50
-        logs_table = logs(file_name, width)
+    total = "{}".format(timedelta_string(summa))
 
-        total = "{}".format(timedelta_string(summa))
+    required, week_holidays, = weekly_and_holidays(year, week)
+    ot = summa - required
+    total_req = "{}".format(timedelta_string(required), )
+    total_ot = "{}".format(timedelta_string(ot))
 
-        required, week_holidays, = weekly_and_holidays(year, week)
-        ot = summa - required
-        total_req = "{}".format(timedelta_string(required), )
-        total_ot = "{}".format(timedelta_string(ot))
+    holidays = "Number of holidays: {}".format(week_holidays)
 
-        holidays = "Number of holidays: {}".format(week_holidays)
-
-        progress = Progress(
-            BarColumn(),
-            TaskProgressColumn(style=Style(bold=True)))
-        task_id = progress.add_task(description="Percent", total=100)
-        progress.update(task_id, advance=round((summa / required) * 100))
-        summary = Group(
-            logs_table,
-            Panel(total, title="Total", title_align="left", width=width, style="spring_green1"),
-            Panel(total_req, title="Required", title_align="left", width=width, style="deep_sky_blue1"),
-            Panel(total_ot, title="Overtime", title_align="left", width=width, style="deep_pink2"),
-            Panel(progress, title="Progress", title_align="left", width=width, style="medium_purple1"),
-            Panel(holidays, width=width, style="gray62")
-        )
-        print()
-        print(Panel(summary, title=":stopwatch:  Hours for week {} in {}".format(week, year),
-                    title_align="left", expand=False))
-
-    except FileNotFoundError as e:
-        print(e)
-        print("No logs for week {} in {}".format(week, year))
+    progress = Progress(
+        BarColumn(),
+        TaskProgressColumn(style=Style(bold=True)))
+    task_id = progress.add_task(description="Percent", total=100)
+    progress.update(task_id, advance=round((summa / required) * 100))
+    summary = Group(
+        record_table,
+        Panel(total, title="Total", title_align="left", width=width, style="spring_green1"),
+        Panel(total_req, title="Required", title_align="left", width=width, style="deep_sky_blue1"),
+        Panel(total_ot, title="Overtime", title_align="left", width=width, style="deep_pink2"),
+        Panel(progress, title="Progress", title_align="left", width=width, style="medium_purple1"),
+        Panel(holidays, width=width, style="gray62")
+    )
+    print()
+    print(Panel(summary, title=":stopwatch:  Hours for week {} in {}".format(week, year),
+                title_align="left", expand=False))

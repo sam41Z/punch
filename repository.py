@@ -1,5 +1,5 @@
 from typing import Sequence
-from datetime import datetime
+from datetime import datetime, date, time
 from sqlalchemy import select, or_, and_, func
 from database import Session, TimeRecordDb
 from model import TimeRecord
@@ -25,3 +25,9 @@ def get_range(start: datetime, end: datetime) -> Sequence[TimeRecord]:
             TimeRecordDb.started_at)
         scalars = session.scalars(query).all()
         return list(map(lambda x: TimeRecord(x.started_at, x.ended_at), scalars))
+
+
+def get_by_year_and_week(year: int, week: int) -> Sequence[TimeRecord]:
+    range_start = datetime.combine(date.fromisocalendar(year, week, 1), time(0))
+    range_end = datetime.combine(date.fromisocalendar(year, week, 7), time(23, 59))
+    return get_range(range_start, range_end)
