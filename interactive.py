@@ -55,7 +55,7 @@ def delete_prompt():
 
 def week_prompt():
     year = retryable_input("Enter year", lambda y: datetime_parser.parse_year(y), 3).year
-    week = retryable_input("Enter week number", lambda w: datetime_parser.parse_week(w), 3).isocalendar().week
+    week = retryable_input("Enter week number", lambda w: datetime_parser.parse_week(w, year), 3).isocalendar().week
     printer.print_success("Year {0}, week {1}".format(year, week))
     return year, week
 
@@ -97,7 +97,7 @@ def weekday_prompt[T](prompt_prefix: str, action: Callable[[date, time, time], N
     terminal_menu = TerminalMenu(weekdays, title="Choose a day")
     index = terminal_menu.show()
     today = date.today()
-    day = datetime.strptime(weekdays[index] + "," + today.strftime("%W,%Y"), "%A,%W,%Y")
+    day = datetime.strptime(weekdays[index] + "," + today.strftime("%W,%Y"), "%A,%W,%Y").date()
     printer.print_success(day.strftime(prompt_prefix + " entry for %A, %d %B %Y"))
 
     time_span_input(lambda starts_at, ends_at: action(day, starts_at, ends_at))
