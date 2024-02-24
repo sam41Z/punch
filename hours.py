@@ -11,11 +11,7 @@ def calc_hours(year: int, week: int) -> timedelta:
     return reduce(lambda x, y: x + y, map(lambda record: record.duration(), records), timedelta())
 
 
-def hours(arg_year, arg_week):
-    today = datetime.today()
-    year = arg_year if arg_year else today.year
-    week = arg_week if arg_week else today.isocalendar().week
-
+def hours(year, week):
     worked = calc_hours(year, week)
     records = Repository().get_by_year_and_week(year, week)
     required, week_holidays, = weekly_and_holidays(year, week)

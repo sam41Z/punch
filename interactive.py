@@ -21,7 +21,7 @@ def interactive_mode():
             tpd_prompt("Add", lambda day, starts_at, ends_at: timerecord.add(day, starts_at, ends_at))
         case 1:
             hours_prompt()
-        case 3:
+        case 2:
             delete_prompt()
 
 
