@@ -30,5 +30,21 @@ def parse_date(s):
     try:
         return datetime.strptime(s, "%Y-%m-%d")
     except ValueError:
-        msg = "not a valid date: {0!r}".format(s)
+        msg = "Not a valid date: {0!r}".format(s)
+        raise ValueError(msg)
+
+
+def parse_year(s):
+    try:
+        return datetime.strptime(s, "%Y")
+    except ValueError:
+        msg = "Not a valid year: {0!r}".format(s)
+        raise ValueError(msg)
+
+
+def parse_week(s):
+    try:
+        return datetime.strptime(s, "%W")
+    except ValueError:
+        msg = "Not a valid week number: {0!r}".format(s)
         raise ValueError(msg)

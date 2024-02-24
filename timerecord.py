@@ -1,8 +1,8 @@
 from datetime import date, time
 from typing import Sequence
 
+import printer
 from model import TimeRecord
-from printer import print_with_new
 from repository import Repository
 
 
@@ -34,4 +34,4 @@ def print_info(selected: Sequence[TimeRecord], title: str):
     week = selected[0].starts_at.isocalendar().week
     records = Repository().get_by_year_and_week(year, week)
 
-    print_with_new(selected, records, title)
+    printer.print_with_selected(selected, records, title)

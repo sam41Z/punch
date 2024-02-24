@@ -77,7 +77,7 @@ def print_overtime(weekly_overtime, year):
                 title_align="left", expand=False))
 
 
-def print_with_new(selected: Sequence[TimeRecord], records: Sequence[TimeRecord], title: str):
+def print_with_selected(selected: Sequence[TimeRecord], records: Sequence[TimeRecord], title: str):
     entries = "\n".join(map(lambda r: r.str_record(), selected))
     info = Group(
         Panel(entries, title=title, width=width, title_align="left", style="spring_green1"),
