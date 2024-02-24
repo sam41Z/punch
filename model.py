@@ -27,5 +27,8 @@ class TimeRecord:
         return self.starts_at.strftime("%H:%M") + "-" + self.ends_at.strftime("%H:%M")
 
     def str_duration(self):
-        # return str(self.ends_at - self.starts_at)[:-3]
         return ':'.join(str(self.ends_at - self.starts_at).split(':')[:2])
+
+    def str_record(self):
+        return "{0} {1} {2}".format(self.str_day(), self.str_time(), self.str_duration())
+
