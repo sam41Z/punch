@@ -1,2 +1,3 @@
 rich
 sqlalchemy
+simple-term-menu

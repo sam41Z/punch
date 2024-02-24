@@ -2,9 +2,11 @@
 
 import argparse
 
+import printer
 from add import add
 from datetime_parser import parse_time_span, parse_date
 from hours import hours
+from interactive import interactive_mode
 from overtime import overtime
 
 
@@ -60,8 +62,7 @@ def parse_args():
 
     return parser.parse_args()
 
-
-if __name__ == '__main__':
+def arg_mode():
     args = parse_args()
     if args.operation == 'add':
         add(args.date, args.time, args.prefix)
@@ -73,3 +74,7 @@ if __name__ == '__main__':
     #     remove(args.offset, args.num)
     # elif args.operation == 'sick':
     #     add_sick(args.date, args.prefix, args.index)
+
+
+if __name__ == '__main__':
+    interactive_mode()
