@@ -4,9 +4,18 @@ from sqlalchemy import TIMESTAMP
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
 from os.path import expanduser
 
-url = "sqlite:///" + expanduser("~/.config/punch") + "/db.db"
-engine = create_engine(url, echo=True)
-Session = sessionmaker(engine)
+
+class Database:
+    url = "sqlite:///" + expanduser("~/.config/punch") + "/db.db"
+
+    def __init__(self, url=url):
+        engine = create_engine(url)
+        self.Session = sessionmaker(engine)
+        Base.metadata.create_all(engine)
+
+    @classmethod
+    def test(cls):
+        return cls(url="sqlite://")
 
 
 class Base(DeclarativeBase):
@@ -15,13 +24,9 @@ class Base(DeclarativeBase):
     }
 
 
-class TimeRecordDb(Base):
+class TimeRecordRow(Base):
     __tablename__ = "time_record"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    started_at: Mapped[datetime]
-    ended_at: Mapped[datetime]
-
-
-def setup():
-    Base.metadata.create_all(engine)
+    starts_at: Mapped[datetime]
+    ends_at: Mapped[datetime]
