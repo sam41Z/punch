@@ -1,13 +1,17 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 class TimeRecord:
     def __init__(self, started_at: datetime, ended_at: datetime):
         if ended_at < started_at:
-            msg = "End time ({}) is before start time ({})".format(ended_at.strftime("%H:%M"), started_at.strftime("%H:%M"))
+            msg = "End time ({}) is before start time ({})".format(ended_at.strftime("%H:%M"),
+                                                                   started_at.strftime("%H:%M"))
             raise ValueError(msg)
         self.started_at = started_at
         self.ended_at = ended_at
+
+    def duration(self) -> timedelta:
+        return self.ended_at - self.started_at
 
     def str_day(self) -> str:
         return self.started_at.strftime("%a")

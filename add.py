@@ -6,7 +6,7 @@ from rich.console import Group
 from rich.panel import Panel
 
 from files import get_file_path_by_date
-from hours import logs_db
+from hours import get_record_table
 
 from repository import create_record
 from model import TimeRecord
@@ -44,7 +44,7 @@ def print_info(new_record: TimeRecord):
     width = 50
     info = Group(
         Panel(entry, title="Added to file", width=width, title_align="left", style="spring_green1"),
-        logs_db(year, week, width)
+        get_record_table(year, week, width)
     )
     print()
     print(Panel(info, title=":chart_increasing:", title_align="left", expand=False))
