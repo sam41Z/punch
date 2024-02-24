@@ -23,7 +23,7 @@ def remove(arg_offset, arg_num):
 
     width = 50
     info = Group(
-        Panel("Removed {} lines".format(arg_num), width=width, style="deep_pink2"),
+        Panel("Removed {} logs".format(arg_num), width=width, style="deep_pink2"),
         logs(filename, width)
     )
     print()

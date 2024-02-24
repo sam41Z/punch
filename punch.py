@@ -22,7 +22,7 @@ def arguments_add(parser):
     parser.add_argument('time', type=parse_time_span, help="Time span like HH-HH or HH:mm-HH:mm")
     parser.add_argument('-d', '--date', type=parse_date, help="Date of the day logged as YYYY-MM-DD")
     parser.add_argument('-p', '--prefix', choices=['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                        help="Prefix of log line,describing the weekday.")
+                        help="Prefix of log line, describing the weekday.")
     parser.add_argument('-i', '--index', type=int,
                         help="Position (index) where the entry should be added (starting at 0)")
 
@@ -30,14 +30,14 @@ def arguments_add(parser):
 def arguments_sick(parser):
     parser.add_argument('-d', '--date', type=parse_date, help="Start date of sickness as YYYY-MM-DD")
     parser.add_argument('-p', '--prefix', choices=['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                        help="Prefix of log line,describing the weekday.")
+                        help="Prefix of log line, describing the weekday.")
     parser.add_argument('-i', '--index', type=int,
                         help="Position (index) where the entry should be added (starting at 0)")
 
 
 def arguments_remove(parser):
-    parser.add_argument('-n', '--num', type=int, default=1, help='Number of lines to remove from the end')
-    parser.add_argument('-o', '--offset', type=int, default=1, help='Number of lines to skip removing')
+    parser.add_argument('-n', '--num', type=int, default=1, help='Number of logs to remove from the end')
+    parser.add_argument('-o', '--offset', type=int, default=1, help='Number of logs to skip removing')
 
 
 def arguments_hours(parser):
@@ -53,8 +53,8 @@ def parse_args():
     parser = argparse.ArgumentParser()
     sub_p = parser.add_subparsers(help="Type of operation", dest='operation')
 
-    arguments_add(sub_p.add_parser('add', help="Add a new line"))
-    arguments_remove(sub_p.add_parser('remove', help="Remove lines"))
+    arguments_add(sub_p.add_parser('add', help="Add a new log"))
+    arguments_remove(sub_p.add_parser('remove', help="Remove log"))
     arguments_hours(sub_p.add_parser('hours', help="Calculate weekly hours"))
     arguments_overtime(sub_p.add_parser('overtime', help="Calculate overtime"))
     arguments_sick(sub_p.add_parser('sick', help="Add sick day"))
