@@ -37,4 +37,5 @@ def add(arg_date, arg_time, arg_prefix):
         Panel(entry, title="Appended to file", width=width, title_align="left", style="spring_green1"),
         logs(filename, width)
     )
+    print()
     print(Panel(info, title=":chart_increasing:", title_align="left", expand=False))

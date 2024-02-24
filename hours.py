@@ -99,6 +99,7 @@ def hours(arg_year, arg_week):
             Panel(progress, title="Progress", title_align="left", width=width, style="medium_purple1"),
             Panel(holidays, width=width, style="gray62")
         )
+        print()
         print(Panel(summary, title=":stopwatch:  Hours for week {} in {}".format(week, year),
                     title_align="left", expand=False))
 

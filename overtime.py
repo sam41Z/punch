@@ -16,7 +16,7 @@ def overtime(arg_week):
     year = date.strftime("%Y")
     current_week = int(date.strftime("%U"))
 
-    weeks = range(arg_week, current_week)
+    weeks = range(arg_week, current_week + 1)
     total = timedelta()
 
     weekly_ot = Table(expand=True, box=box.ROUNDED, width=width, style="gold1")
@@ -42,6 +42,6 @@ def overtime(arg_week):
         weekly_ot,
         Panel(timedelta_string(total), title="Total Overtime", title_align="left", width=width, style="deep_sky_blue1"),
     )
-
+    print()
     print(Panel(summary, title=":stopwatch:  Overtime from week {} to {} in {}".format(arg_week, current_week, year),
                 title_align="left", expand=False))

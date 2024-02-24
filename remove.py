@@ -20,4 +20,5 @@ def remove(arg_num):
         Panel("Removed {} lines".format(arg_num),  width=width, style="deep_pink2"),
         logs(filename, width)
     )
+    print()
     print(Panel(info, title=":chart_decreasing:", title_align="left", expand=False))
