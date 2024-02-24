@@ -46,3 +46,4 @@ class Migration:
                     ends_at = parse_time(chunks[3])
                     record = TimeRecord.create(day, starts_at, ends_at)
                     self.repository.create_record(record)
+                    print("Migrated: " + record.str_record())
