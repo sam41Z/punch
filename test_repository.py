@@ -71,20 +71,20 @@ class TestRepository(TestCase):
         self.assert_overlap(first, second)
 
     def test_in_weeks_range(self):
-        week_start =  date(2024, 2, 19)
-        week_end =  date(2024, 2, 25)
+        week_start = date(2024, 2, 19)
+        week_end = date(2024, 2, 25)
 
         first = TimeRecord.create(week_start, time(0), time(1))
         self.repository.create_record(first)
-        last = TimeRecord.create(week_end, time(23), time(23,59))
+        last = TimeRecord.create(week_end, time(23), time(23, 59))
         self.repository.create_record(last)
         records = self.repository.get_by_year_and_week(week_start.year, week_start.isocalendar().week)
         self.assertEqual(2, len(records))
 
     def test_out_of_weeks_range(self):
-        week_start =  date(2024, 2, 19)
+        week_start = date(2024, 2, 19)
 
-        first = TimeRecord.create(date(2024, 2, 18), time(23), time(23,59))
+        first = TimeRecord.create(date(2024, 2, 18), time(23), time(23, 59))
         self.repository.create_record(first)
         last = TimeRecord.create(date(2024, 2, 26), time(0), time(1))
         self.repository.create_record(last)

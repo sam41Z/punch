@@ -1,4 +1,5 @@
 import math
+from datetime import timedelta
 from functools import reduce
 from typing import Sequence
 
@@ -8,9 +9,6 @@ from rich.panel import Panel
 from rich.progress import Progress, BarColumn, TaskProgressColumn
 from rich.style import Style
 from rich.table import Table
-
-from datetime import timedelta
-
 from rich.text import Text
 
 from model import TimeRecord
@@ -108,6 +106,3 @@ def split_delta(delta):
     hours = int(total_minutes / 60)
     signed_minutes = minutes if delta < timedelta() and hours == 0 else abs(minutes)
     return hours, minutes, signed_minutes
-
-
-

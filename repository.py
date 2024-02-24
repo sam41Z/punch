@@ -1,6 +1,8 @@
-from typing import Sequence
 from datetime import datetime, date, time
+from typing import Sequence
+
 from sqlalchemy import select, or_, and_, func, ColumnElement
+
 from database import Database, TimeRecordRow
 from model import TimeRecord
 
