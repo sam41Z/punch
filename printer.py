@@ -1,8 +1,8 @@
-import math
 from datetime import timedelta
 from functools import reduce
 from typing import Sequence
 
+import math
 from rich import box, print
 from rich.console import Group
 from rich.panel import Panel
@@ -24,6 +24,10 @@ def get_record_table(records: Sequence[TimeRecord]) -> Table:
     for record in records:
         table.add_row(record.str_day(), record.str_time(), record.str_duration())
     return table
+
+
+def print_record_table(records: Sequence[TimeRecord]):
+    print(get_record_table(records))
 
 
 def print_weekly(records: Sequence[TimeRecord], required: timedelta, worked: timedelta, week_holidays, year, week):
@@ -73,11 +77,12 @@ def print_overtime(weekly_overtime, year):
                 title_align="left", expand=False))
 
 
-def print_with_new(new_record, records):
-    entry = new_record.str_day() + " " + new_record.str_time() + " " + new_record.str_duration()
+def print_with_new(selected: Sequence[TimeRecord], records: Sequence[TimeRecord], title: str):
+    entries = "\n".join(map(lambda r: r.str_record(), selected))
     info = Group(
-        Panel(entry, title="Added to file", width=width, title_align="left", style="spring_green1"),
+        Panel(entries, title=title, width=width, title_align="left", style="spring_green1"),
         get_record_table(records)
+
     )
     print()
     print(Panel(info, title=":chart_increasing:", title_align="left", expand=False))
