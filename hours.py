@@ -70,7 +70,6 @@ def hours(arg_year, arg_week):
         week = int(date.strftime("%U"))
 
     file_name = get_file_path_by_yw(year, week)
-    print(file_name)
 
     summa = calc_hours(filename=file_name)
 
