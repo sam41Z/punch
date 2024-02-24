@@ -17,7 +17,6 @@ def remove(arg_offset, arg_num):
         new_lines = lines[:-r_start]
         if arg_offset > arg_num:
             new_lines = new_lines + lines[-(arg_offset-arg_num):]
-        print(new_lines)
         file.writelines(new_lines)
 
     width = 50

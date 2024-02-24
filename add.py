@@ -50,15 +50,20 @@ def print_info(entry, filename):
 
 def write(day, entry, index):
     filename = get_file_path_by_date(day)
-    with open(filename, 'r+') as file:
-        lines = file.readlines()
-        file.seek(0)
-        file.truncate()
-        if index is None:
-            lines.append(entry + '\n')
-        else:
-            lines.insert(index, entry + '\n')
+    try:
+        with open(filename, 'r') as file:
+            lines = file.readlines()
+    except IOError:
+        lines = []
+
+    if index is None:
+        lines.append(entry + '\n')
+    else:
+        lines.insert(index, entry + '\n')
+
+    with open(filename, 'w') as file:
         file.writelines(lines)
+
     return filename
 
 

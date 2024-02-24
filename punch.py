@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import argparse
 
@@ -14,7 +14,7 @@ def add_year_argument(parser):
 
 
 def add_week_argument(parser):
-    parser.add_argument('-w', '--week', type=int, choices=range(1, 52), metavar="[1-52]", help="Week number (1-52)")
+    parser.add_argument('-w', '--week', type=int, choices=range(1, 53), metavar="[1-52]", help="Week number (1-52)")
 
 
 def arguments_add(parser):

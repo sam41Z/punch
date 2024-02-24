@@ -115,4 +115,5 @@ def hours(arg_year, arg_week):
                     title_align="left", expand=False))
 
     except FileNotFoundError as e:
+        print(e)
         print("No logs for week {} in {}".format(week, year))
