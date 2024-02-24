@@ -77,7 +77,7 @@ def hours(arg_year, arg_week):
     if arg_week:
         week = arg_week
     else:
-        week = int(date.strftime("%U"))
+        week = date.isocalendar().week
 
     file_name = get_file_path_by_yw(year, week)
     summa = calc_hours(filename=file_name)
