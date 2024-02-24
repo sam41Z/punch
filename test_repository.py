@@ -15,10 +15,6 @@ class TestRepository(TestCase):
     def setUpClass(cls):
         cls.repository = Repository.test()
 
-    @classmethod
-    def tearDownClass(cls):
-        pass
-
     def tearDown(self):
         with self.repository.Session.begin() as session:
             query = delete(TimeRecordRow)

@@ -42,9 +42,9 @@ def parse_year(s):
         raise ValueError(msg)
 
 
-def parse_week(s):
+def parse_week(week_str: str, year: int):
     try:
-        return datetime.strptime(s, "%W")
+        return datetime.strptime("{0},{1},1".format(week_str, year), "%W,%Y,%w")
     except ValueError:
         msg = "Not a valid week number: {0!r}".format(s)
         raise ValueError(msg)

@@ -3,10 +3,12 @@
 import argparse
 from datetime import date, datetime
 
+import migrate
 import printer
 from datetime_parser import parse_time_span
 from hours import hours
 from interactive import interactive_mode
+from repository import Repository
 from timerecord import add
 
 
@@ -21,7 +23,9 @@ def parse_args():
     sub_p = parser.add_subparsers(help="Type of operation", dest='operation')
     arguments_add(sub_p.add_parser('add', help="Add a new log"))
     sub_p.add_parser('hours', help="Calculate weekly hours")
-
+    migration_parser = sub_p.add_parser('migrate', help="Migrate data from old storage")
+    migration_parser.add_argument('year', type=int, choices=range(2021, 3000), metavar="2021+",
+                                  help="Year (2021 or later)")
     return parser.parse_args()
 
 
@@ -46,3 +50,5 @@ if __name__ == '__main__':
     elif args.operation == 'hours':
         today = date.today()
         hours(today.year, today.isocalendar().week)
+    elif args.operation == 'migrate':
+        migrate.Migration(Repository.test()).migrate(args.year)
