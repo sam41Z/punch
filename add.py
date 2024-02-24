@@ -20,7 +20,7 @@ def day_prefix(arg_date, arg_prefix):
         prefix = day.strftime("%a")
     return day, prefix
 
-def add(arg_date, arg_time, arg_prefix):
+def add(arg_date, arg_time, arg_prefix, arg_index):
     day, prefix = day_prefix(arg_date, arg_prefix)
 
     start_time, end_time = arg_time
@@ -34,31 +34,38 @@ def add(arg_date, arg_time, arg_prefix):
 
     entry = '{} {} - {} {}'.format(prefix, start.strftime("%H:%M"), end.strftime("%H:%M"),
                                    ':'.join(str(delta).split(':')[:2]))
-    filename = wirte(day, entry)
+    filename = write(day, entry, arg_index)
     print_info(entry, filename)
 
 
 def print_info(entry, filename):
     width = 50
     info = Group(
-        Panel(entry, title="Appended to file", width=width, title_align="left", style="spring_green1"),
+        Panel(entry, title="Added to file", width=width, title_align="left", style="spring_green1"),
         logs(filename, width)
     )
     print()
     print(Panel(info, title=":chart_increasing:", title_align="left", expand=False))
 
 
-def wirte(day, entry):
+def write(day, entry, index):
     filename = get_file_path_by_date(day)
-    with open(filename, 'a') as file:
-        file.write(entry + '\n')
+    with open(filename, 'r+') as file:
+        lines = file.readlines()
+        file.seek(0)
+        file.truncate()
+        if index is None:
+            lines.append(entry + '\n')
+        else:
+            lines.insert(index, entry + '\n')
+        file.writelines(lines)
     return filename
 
 
-def add_sick(args_date, args_prefix):
+def add_sick(args_date, args_prefix, arg_index):
     day, prefix = day_prefix(args_date, args_prefix)
     delta = timedelta(hours=32) / 5
     print(delta)
     entry = '{} 🤒 {}'.format(prefix, ':'.join(str(delta).split(':')[:2]))
-    filename = wirte(day, entry)
+    filename = write(day, entry, arg_index)
     print_info(entry, filename)
