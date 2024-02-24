@@ -28,6 +28,33 @@ class TestRepository(TestCase):
         result = self.repository.get_by_year_and_week(2024, 8)
         self.assertEqual(len(result), 0)
 
+    def test_delete(self):
+        d = date(2024, 2, 24)
+        record = TimeRecord.create(d, time(9), time(11))
+        self.repository.create_record(record)
+        with self.repository.Session.begin() as session:
+            results = session.execute(select(TimeRecordRow)).scalars().all()
+            self.assertEqual(1, len(results))
+        self.repository.remove_record(record)
+        with self.repository.Session.begin() as session:
+            results = session.execute(select(TimeRecordRow)).scalars().all()
+            self.assertEqual(0, len(results))
+
+    def test_delete_not_found(self):
+        d = date(2024, 2, 24)
+        first = TimeRecord.create(d, time(9), time(11))
+        self.repository.create_record(first)
+        with self.repository.Session.begin() as session:
+            results = session.execute(select(TimeRecordRow)).scalars().all()
+            self.assertEqual(1, len(results))
+
+        second = TimeRecord.create(d, time(9), time(10))
+        self.assertRaises(ValueError, self.repository.remove_record, second)
+
+        with self.repository.Session.begin() as session:
+            results = session.execute(select(TimeRecordRow)).scalars().all()
+            self.assertEqual(1, len(results))
+
     def test_no_overlap_after(self):
         d = date(2024, 2, 24)
         first = TimeRecord.create(d, time(9), time(11))

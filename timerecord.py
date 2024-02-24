@@ -1,4 +1,4 @@
-from datetime import datetime, date, time
+from datetime import date, time
 
 from model import TimeRecord
 from printer import print_with_new
@@ -9,7 +9,6 @@ def add(day: date, starts_at: time, ends_at: time):
     new_record = TimeRecord.create(day, starts_at, ends_at)
     Repository().create_record(new_record)
     print_info(new_record)
-
 
 
 def print_info(new_record: TimeRecord):
