@@ -67,7 +67,7 @@ if __name__ == '__main__':
     if args.operation == 'remove':
         remove(args.offset, args.num)
     elif args.operation == 'add':
-        add(args.date, args.time, args.prefix, args.index)
+        add(args.date, args.time, args.prefix)
     elif args.operation == 'sick':
         add_sick(args.date, args.prefix, args.index)
     elif args.operation == 'hours':

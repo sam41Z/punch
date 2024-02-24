@@ -1,5 +1,5 @@
-import math
-from datetime import datetime, timedelta
+import math, repository
+from datetime import datetime, timedelta, date, time
 
 from rich import print, box
 from rich.console import Group
@@ -64,6 +64,19 @@ def logs(file_name, width):
             logs.add_row(columns[0], columns[1], columns[2])
         else:
             logs.add_row(columns[0], ''.join(columns[1:4]), columns[4])
+    return logs
+
+
+def logs_db(year: int, week: int, width):
+    range_start = datetime.combine(date.fromisocalendar(year, week, 1), time(0))
+    range_end = datetime.combine(date.fromisocalendar(year, week, 7), time(23, 59))
+    records = repository.get_range(range_start, range_end)
+    logs = Table(expand=True, box=box.ROUNDED, width=width, style="gold1")
+    logs.add_column("Day")
+    logs.add_column("Time")
+    logs.add_column("Duration")
+    for record in records:
+        logs.add_row(record.str_day(), record.str_time(), record.str_duration())
     return logs
 
 
