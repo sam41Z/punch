@@ -1,7 +1,7 @@
-from datetime import datetime, timezone
+from datetime import datetime
 from os.path import expanduser
 
-from sqlalchemy import create_engine, TypeDecorator, Float, Integer
+from sqlalchemy import create_engine, TypeDecorator, Integer
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
 
 
