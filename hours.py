@@ -1,5 +1,5 @@
-import math, repository
-from datetime import datetime, timedelta, date, time
+import math
+from datetime import datetime, timedelta
 from functools import reduce
 
 from rich import print, box
@@ -11,6 +11,7 @@ from rich.table import Table
 
 from holidays import weekly_and_holidays
 import repository
+from printer import get_record_table
 
 
 def calc_hours(year: int, week: int) -> timedelta:
@@ -58,17 +59,6 @@ def logs(file_name, width):
     return logs
 
 
-def get_record_table(year: int, week: int, width) -> Table:
-    records = repository.get_by_year_and_week(year, week)
-    table = Table(expand=True, box=box.ROUNDED, width=width, style="gold1")
-    table.add_column("Day")
-    table.add_column("Time")
-    table.add_column("Duration")
-    for record in records:
-        table.add_row(record.str_day(), record.str_time(), record.str_duration())
-    return table
-
-
 def hours(arg_year, arg_week):
     today = datetime.today()
     year = arg_year if arg_year else today.year
@@ -77,7 +67,8 @@ def hours(arg_year, arg_week):
     summa = calc_hours(year, week)
 
     width = 50
-    record_table = get_record_table(year, week, width)
+    records = repository.get_by_year_and_week(year, week)
+    record_table = get_record_table(records, width)
 
     total = "{}".format(timedelta_string(summa))
 

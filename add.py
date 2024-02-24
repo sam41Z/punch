@@ -5,8 +5,9 @@ from rich import print
 from rich.console import Group
 from rich.panel import Panel
 
+import repository
 from files import get_file_path_by_date
-from hours import get_record_table
+from printer import get_record_table
 
 from repository import create_record
 from model import TimeRecord
@@ -41,10 +42,12 @@ def print_info(new_record: TimeRecord):
     year = new_record.started_at.year
     week = new_record.started_at.isocalendar().week
     entry = new_record.str_day() + " " + new_record.str_time() + " " + new_record.str_duration()
+    records = repository.get_by_year_and_week(year, week)
+
     width = 50
     info = Group(
         Panel(entry, title="Added to file", width=width, title_align="left", style="spring_green1"),
-        get_record_table(year, week, width)
+        get_record_table(records, width)
     )
     print()
     print(Panel(info, title=":chart_increasing:", title_align="left", expand=False))
