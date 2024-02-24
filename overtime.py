@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from files import get_file_path_by_yw, parse_path
 from holidays import num_holidays, weekly_and_holidays
-from hours import calc_hours, timedelta_string
+from hours import calc_hours, timedelta_string, timedelta_string_short
 from rich.table import Table
 from rich import print, box
 from rich.console import Group
@@ -29,14 +29,16 @@ def overtime(arg_week):
         ot = summa - required
         total = total + ot
 
+        prefix = " "
         if ot < timedelta():
             style = "deep_pink2"
+            prefix = ""
         elif ot > timedelta():
             style = "spring_green1"
         else:
             style = ""
 
-        weekly_ot.add_row("{}".format(week), Text(timedelta_string(ot), style=style))
+        weekly_ot.add_row("{}".format(week), Text(timedelta_string_short(ot), style=style))
 
     summary = Group(
         weekly_ot,
