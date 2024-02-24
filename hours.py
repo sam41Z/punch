@@ -46,7 +46,6 @@ def timedelta_string(delta):
 
 
 def logs(file_name, width):
-
     file = open(file_name, 'r')
     logs = Table(expand=True, box=box.ROUNDED, width=width, style="gold1")
     logs.add_column("Day")
@@ -71,6 +70,7 @@ def hours(arg_year, arg_week):
         week = int(date.strftime("%U"))
 
     file_name = get_file_path_by_yw(year, week)
+    print(file_name)
 
     summa = calc_hours(filename=file_name)
 
@@ -103,5 +103,5 @@ def hours(arg_year, arg_week):
         print(Panel(summary, title=":stopwatch:  Hours for week {} in {}".format(week, year),
                     title_align="left", expand=False))
 
-    except FileNotFoundError:
+    except FileNotFoundError as e:
         print("No logs for week {} in {}".format(week, year))
