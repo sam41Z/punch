@@ -7,21 +7,10 @@ from repository import create_record
 from model import TimeRecord
 
 
-def day_prefix(arg_date, arg_prefix):
-    if arg_date:
-        day = arg_date
-    else:
-        day = date.today()
-
-    if arg_prefix:
-        prefix = arg_prefix
-    else:
-        prefix = day.strftime("%a")
-    return day, prefix
-
-
 def add(arg_date, arg_time, arg_prefix):
-    day, prefix = day_prefix(arg_date, arg_prefix)
+    day = arg_date if arg_date else date.today()
+    if arg_prefix:
+        day = datetime.strptime(arg_prefix + "," + day.strftime("%W,%Y"), "%a,%W,%Y")
 
     start_time, end_time = arg_time
     start = datetime.combine(day, start_time)
