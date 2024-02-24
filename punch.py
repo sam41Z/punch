@@ -2,11 +2,10 @@
 
 import argparse
 
-from add import add, add_sick
+from add import add
 from datetime_parser import parse_time_span, parse_date
 from hours import hours
 from overtime import overtime
-from remove import remove
 
 
 def add_year_argument(parser):

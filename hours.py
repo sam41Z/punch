@@ -2,12 +2,11 @@ import math
 from datetime import datetime, timedelta
 from functools import reduce
 
-from rich import print, box
+from rich import print
 from rich.console import Group
 from rich.panel import Panel
 from rich.progress import Progress, BarColumn, TaskProgressColumn
 from rich.style import Style
-from rich.table import Table
 
 from holidays import weekly_and_holidays
 import repository
@@ -15,8 +14,9 @@ from printer import get_record_table
 
 
 def calc_hours(year: int, week: int) -> timedelta:
+    print(str(year) + " " + str(week))
     records = repository.get_by_year_and_week(year, week)
-    return reduce(lambda x, y: x + y, map(lambda record: record.duration(), records))
+    return reduce(lambda x, y: x + y, map(lambda record: record.duration(), records), timedelta())
 
 
 def split_delta(delta):
@@ -42,21 +42,6 @@ def timedelta_string_short(delta):
     hours, minutes, signed_minutes = split_delta(delta)
     signed_minutes = minutes if delta < timedelta() and hours == 0 else abs(minutes)
     return "{: 5}h {: 3}m".format(hours, signed_minutes)
-
-
-def logs(file_name, width):
-    file = open(file_name, 'r')
-    logs = Table(expand=True, box=box.ROUNDED, width=width, style="gold1")
-    logs.add_column("Day")
-    logs.add_column("Time")
-    logs.add_column("Duration")
-    for line in file.readlines():
-        columns = line.strip().split(" ")
-        if columns[1] == '🤒':
-            logs.add_row(columns[0], columns[1], columns[2])
-        else:
-            logs.add_row(columns[0], ''.join(columns[1:4]), columns[4])
-    return logs
 
 
 def hours(arg_year, arg_week):
