@@ -1,12 +1,7 @@
-import argparse
-from datetime import datetime, date, timedelta
-
-from rich import print
-from rich.console import Group
-from rich.panel import Panel
+from datetime import datetime, date
 
 import repository
-from printer import get_record_table
+from printer import print_with_new
 
 from repository import create_record
 from model import TimeRecord
@@ -40,13 +35,6 @@ def add(arg_date, arg_time, arg_prefix):
 def print_info(new_record: TimeRecord):
     year = new_record.started_at.year
     week = new_record.started_at.isocalendar().week
-    entry = new_record.str_day() + " " + new_record.str_time() + " " + new_record.str_duration()
     records = repository.get_by_year_and_week(year, week)
 
-    width = 50
-    info = Group(
-        Panel(entry, title="Added to file", width=width, title_align="left", style="spring_green1"),
-        get_record_table(records, width)
-    )
-    print()
-    print(Panel(info, title=":chart_increasing:", title_align="left", expand=False))
+    print_with_new(new_record, records)
