@@ -4,7 +4,7 @@ from typing import Callable
 from rich.console import Console
 from simple_term_menu import TerminalMenu
 
-import add
+import timerecord
 import datetime_parser
 import printer
 

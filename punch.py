@@ -3,7 +3,7 @@
 import argparse
 
 import printer
-from add import add
+from timerecord import add
 from datetime_parser import parse_time_span, parse_date
 from hours import hours
 from interactive import interactive_mode
