@@ -63,8 +63,8 @@ def print_overtime(weekly_overtime, year):
 
         weekly_ot.add_row("{}".format(week), Text(timedelta_string_short(overtime), style=style))
 
-    first_week = min(map(lambda o: o[1], weekly_overtime))
-    last_week = max(map(lambda o: o[1], weekly_overtime))
+    first_week = min(map(lambda o: o[0], weekly_overtime))
+    last_week = max(map(lambda o: o[0], weekly_overtime))
     total = reduce(lambda x, y: x + y, map(lambda o: o[1], weekly_overtime), timedelta())
     summary = Group(
         weekly_ot,
@@ -79,7 +79,7 @@ def print_with_new(new_record, records):
     entry = new_record.str_day() + " " + new_record.str_time() + " " + new_record.str_duration()
     info = Group(
         Panel(entry, title="Added to file", width=width, title_align="left", style="spring_green1"),
-        get_record_table(records, width)
+        get_record_table(records)
     )
     print()
     print(Panel(info, title=":chart_increasing:", title_align="left", expand=False))

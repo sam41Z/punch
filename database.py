@@ -5,7 +5,6 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
 from os.path import expanduser
 
 url = "sqlite:///" + expanduser("~/.config/punch") + "/db.db"
-print(url)
 engine = create_engine(url, echo=True)
 Session = sessionmaker(engine)
 
