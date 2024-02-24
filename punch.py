@@ -32,6 +32,7 @@ def arguments_sick(parser):
 
 def arguments_remove(parser):
     parser.add_argument('-n', '--num', type=int, default=1, help='Number of lines to remove from the end')
+    parser.add_argument('-o', '--offset', type=int, default=1, help='Number of lines to skip removing')
 
 
 def arguments_hours(parser):
@@ -59,7 +60,7 @@ def parse_args():
 if __name__ == '__main__':
     args = parse_args()
     if args.operation == 'remove':
-        remove(args.num)
+        remove(args.offset, args.num)
     elif args.operation == 'add':
         add(args.date, args.time, args.prefix)
     elif args.operation == 'sick':
