@@ -67,12 +67,3 @@ def write(day, entry, index):
         file.writelines(lines)
 
     return filename
-
-
-def add_sick(args_date, args_prefix, arg_index):
-    day, prefix = day_prefix(args_date, args_prefix)
-    delta = timedelta(hours=32) / 5
-    print(delta)
-    entry = '{} 🤒 {}'.format(prefix, ':'.join(str(delta).split(':')[:2]))
-    filename = write(day, entry, arg_index)
-    print_info(entry, filename)
