@@ -1,37 +1,45 @@
 from typing import Sequence
 from datetime import datetime, date, time
 from sqlalchemy import select, or_, and_, func, ColumnElement
-from database import Session, TimeRecordDb
+from database import Database, TimeRecordRow
 from model import TimeRecord
 
 
-def create_record(new: TimeRecord) -> None:
-    new_db_record = TimeRecordDb(started_at=new.started_at, ended_at=new.ended_at)
-    with Session.begin() as session:
-        count: int = session.execute(select(func.count()).select_from(TimeRecordDb).where(
-            range_overlaps(new.started_at, new.ended_at))).scalar()
-        print(count)
-        if count > 0:
-            raise ValueError("Time record overlaps with existing")
-        session.add(new_db_record)
+class Repository:
 
+    def __init__(self, database=Database()):
+        self.Session = database.Session
 
-def range_overlaps(started_at: datetime, ended_at: datetime) -> ColumnElement[bool]:
-    return or_(
-        and_(TimeRecordDb.started_at <= started_at, TimeRecordDb.ended_at > started_at),
-        and_(TimeRecordDb.started_at >= started_at, TimeRecordDb.ended_at <= ended_at),
-        and_(TimeRecordDb.started_at <= started_at, TimeRecordDb.ended_at >= ended_at)
-    )
+    @classmethod
+    def test(cls):
+        return cls(database=Database.test())
 
+    def create_record(self, new: TimeRecord) -> None:
+        new_db_record = TimeRecordRow(starts_at=new.starts_at, ends_at=new.ends_at)
+        with self.Session.begin() as session:
+            count: int = session.execute(select(func.count()).select_from(TimeRecordRow).where(
+                self.range_overlaps(new.starts_at, new.ends_at))).scalar()
+            if count > 0:
+                raise ValueError("Time record overlaps with existing")
+            session.add(new_db_record)
 
-def get_range(started_at: datetime, ended_at: datetime) -> Sequence[TimeRecord]:
-    with Session.begin() as session:
-        query = select(TimeRecordDb).where(range_overlaps(started_at, ended_at)).order_by(TimeRecordDb.started_at)
-        scalars = session.scalars(query).all()
-        return list(map(lambda x: TimeRecord(x.started_at, x.ended_at), scalars))
+    @staticmethod
+    def range_overlaps(starts_at: datetime, ends_at: datetime) -> ColumnElement[bool]:
+        return or_(
+            and_(TimeRecordRow.starts_at < ends_at, TimeRecordRow.ends_at >= ends_at),
+            and_(TimeRecordRow.starts_at <= starts_at, TimeRecordRow.ends_at > starts_at),
+            and_(TimeRecordRow.starts_at >= starts_at, TimeRecordRow.ends_at <= ends_at),
+            and_(TimeRecordRow.starts_at <= starts_at, TimeRecordRow.ends_at >= ends_at)
+        )
 
+    def get_range(self, starts_at: datetime, ends_at: datetime) -> Sequence[TimeRecord]:
+        with self.Session.begin() as session:
+            query = select(TimeRecordRow).where(self.range_overlaps(starts_at, ends_at)).order_by(
+                TimeRecordRow.starts_at)
+            scalars = session.scalars(query).all()
+            return list(map(lambda x: TimeRecord(x.starts_at, x.ends_at), scalars))
 
-def get_by_year_and_week(year: int, week: int) -> Sequence[TimeRecord]:
-    range_start = datetime.combine(date.fromisocalendar(year, week, 1), time(0))
-    range_end = datetime.combine(date.fromisocalendar(year, week, 7), time(23, 59))
-    return get_range(range_start, range_end)
+    def get_by_year_and_week(self, year: int, week: int) -> Sequence[TimeRecord]:
+        range_start = datetime.combine(date.fromisocalendar(year, week, 1), time(0))
+        range_end = datetime.combine(date.fromisocalendar(year, week, 7), time(23, 59))
+        return self.get_range(range_start, range_end)

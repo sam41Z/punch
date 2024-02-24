@@ -1,9 +1,8 @@
 from datetime import datetime, date
 
-import repository
 from printer import print_with_new
 
-from repository import create_record
+from repository import Repository
 from model import TimeRecord
 
 
@@ -17,13 +16,13 @@ def add(arg_date, arg_time, arg_prefix):
     end = datetime.combine(day, end_time)
 
     new_record = TimeRecord(start, end)
-    create_record(new_record)
+    Repository().create_record(new_record)
     print_info(new_record)
 
 
 def print_info(new_record: TimeRecord):
-    year = new_record.started_at.year
-    week = new_record.started_at.isocalendar().week
-    records = repository.get_by_year_and_week(year, week)
+    year = new_record.starts_at.year
+    week = new_record.starts_at.isocalendar().week
+    records = Repository().get_by_year_and_week(year, week)
 
     print_with_new(new_record, records)

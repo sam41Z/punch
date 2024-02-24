@@ -1,24 +1,28 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date, time
 
 
 class TimeRecord:
-    def __init__(self, started_at: datetime, ended_at: datetime):
-        if ended_at < started_at:
-            msg = "End time ({}) is before start time ({})".format(ended_at.strftime("%H:%M"),
-                                                                   started_at.strftime("%H:%M"))
+    def __init__(self, starts_at: datetime, ends_at: datetime):
+        if ends_at < starts_at:
+            msg = "End time ({}) is before start time ({})".format(ends_at.strftime("%H:%M"),
+                                                                   starts_at.strftime("%H:%M"))
             raise ValueError(msg)
-        self.started_at = started_at
-        self.ended_at = ended_at
+        self.starts_at = starts_at
+        self.ends_at = ends_at
+
+    @classmethod
+    def create(cls, day: date, starts_at: time, ends_at: time):
+        return cls(datetime.combine(day, starts_at), datetime.combine(day, ends_at))
 
     def duration(self) -> timedelta:
-        return self.ended_at - self.started_at
+        return self.ends_at - self.starts_at
 
     def str_day(self) -> str:
-        return self.started_at.strftime("%a")
+        return self.starts_at.strftime("%a")
 
     def str_time(self) -> str:
-        return self.started_at.strftime("%H:%M") + "-" + self.ended_at.strftime("%H:%M")
+        return self.starts_at.strftime("%H:%M") + "-" + self.ends_at.strftime("%H:%M")
 
     def str_duration(self):
-        # return str(self.ended_at - self.started_at)[:-3]
-        return ':'.join(str(self.ended_at - self.started_at).split(':')[:2])
+        # return str(self.ends_at - self.starts_at)[:-3]
+        return ':'.join(str(self.ends_at - self.starts_at).split(':')[:2])
