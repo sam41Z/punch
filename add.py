@@ -6,7 +6,6 @@ from rich.console import Group
 from rich.panel import Panel
 
 import repository
-from files import get_file_path_by_date
 from printer import get_record_table
 
 from repository import create_record
@@ -51,22 +50,3 @@ def print_info(new_record: TimeRecord):
     )
     print()
     print(Panel(info, title=":chart_increasing:", title_align="left", expand=False))
-
-
-def write(day, entry, index):
-    filename = get_file_path_by_date(day)
-    try:
-        with open(filename, 'r') as file:
-            lines = file.readlines()
-    except IOError:
-        lines = []
-
-    if index is None:
-        lines.append(entry + '\n')
-    else:
-        lines.insert(index, entry + '\n')
-
-    with open(filename, 'w') as file:
-        file.writelines(lines)
-
-    return filename

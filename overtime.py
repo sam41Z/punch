@@ -6,7 +6,6 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
-from files import get_file_path_by_yw
 from holidays import weekly_and_holidays
 from hours import calc_hours, timedelta_string, timedelta_string_short
 
@@ -14,9 +13,9 @@ from hours import calc_hours, timedelta_string, timedelta_string_short
 def overtime(arg_week):
     width = 50
 
-    date = datetime.today()
-    year = date.strftime("%Y")
-    current_week = int(date.strftime("%U"))
+    today = datetime.today()
+    year = today.year
+    current_week = today.isocalendar().week
 
     weeks = range(arg_week, current_week + 1)
     total = timedelta()
@@ -25,8 +24,7 @@ def overtime(arg_week):
     weekly_ot.add_column("Week")
     weekly_ot.add_column("Overtime")
     for week in weeks:
-        file_name = get_file_path_by_yw(year, week)
-        summa = calc_hours(filename=file_name)
+        summa = calc_hours(year, week)
         required, week_holidays, = weekly_and_holidays(year, week)
         ot = summa - required
         total = total + ot
