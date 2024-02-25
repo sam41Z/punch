@@ -41,7 +41,7 @@ def hours_prompt(back: Callable):
 
 
 def delete_prompt(back: Callable, cursor_index=0):
-    options = ["[t] this week", "[o] other week", "[m] manual", None, "[b] back"]
+    options = ["[t] this week", "[o] other week", None, "[b] back"]
     terminal_menu = TerminalMenu(options, title="Remove", cursor_index=cursor_index)
     index = terminal_menu.show()
     match index:
@@ -51,10 +51,7 @@ def delete_prompt(back: Callable, cursor_index=0):
         case 1:
             year, week = week_prompt()
             week_delete_prompt(year, week)
-        case 2:
-            tpd_prompt("Remove", lambda day, starts_at, ends_at: timerecord.remove(day, starts_at, ends_at),
-                       lambda: delete_prompt(back, cursor_index=2))
-        case 4:
+        case 3:
             back()
 
 
@@ -83,6 +80,7 @@ def week_delete_prompt(year: int, week: int):
     if answer == "y":
         timerecord.remove_multiple(selected)
     else:
+        printer.print_error("Deletion not confirmed, exiting.")
         exit()
 
 
