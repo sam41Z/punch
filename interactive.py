@@ -47,10 +47,10 @@ def delete_prompt(back: Callable, cursor_index=0):
     match index:
         case 0:
             today = date.today()
-            week_delete_prompt(today.year, today.isocalendar().week, lambda: delete_prompt(back))
+            week_delete_prompt(today.year, today.isocalendar().week)
         case 1:
             year, week = week_prompt()
-            week_delete_prompt(year, week, lambda: delete_prompt(back, cursor_index=1))
+            week_delete_prompt(year, week)
         case 2:
             tpd_prompt("Remove", lambda day, starts_at, ends_at: timerecord.remove(day, starts_at, ends_at),
                        lambda: delete_prompt(back, cursor_index=2))
@@ -67,7 +67,7 @@ def week_prompt():
     return year, week
 
 
-def week_delete_prompt(year: int, week: int, back: Callable):
+def week_delete_prompt(year: int, week: int):
     records = timerecord.get_by_year_and_week(year, week)
     if len(records) == 0:
         printer.print_success("Empty. No records to delete.")
@@ -83,7 +83,7 @@ def week_delete_prompt(year: int, week: int, back: Callable):
     if answer == "y":
         timerecord.remove_multiple(selected)
     else:
-        back()
+        exit()
 
 
 def tpd_prompt(prompt_prefix: str, action: Callable[[date, time, time], None], back: Callable):
@@ -103,7 +103,7 @@ def tpd_prompt(prompt_prefix: str, action: Callable[[date, time, time], None], b
             back()
 
 
-def weekday_prompt[T](prompt_prefix: str, action: Callable[[date, time, time], None], back: Callable):
+def weekday_prompt(prompt_prefix: str, action: Callable[[date, time, time], None], back: Callable):
     weekdays = list(map(lambda d: date.fromisocalendar(2024, 1, d).strftime("%A"), range(1, 8)))
     options = weekdays + [None, "[b] back"]
     terminal_menu = TerminalMenu(options, title="Choose a day")
@@ -121,7 +121,7 @@ def weekday_prompt[T](prompt_prefix: str, action: Callable[[date, time, time], N
             time_span_input(lambda starts_at, ends_at: action(day, starts_at, ends_at))
 
 
-def date_prompt[T](prompt_prefix: str, action: Callable[[date, time, time], None]):
+def date_prompt(prompt_prefix: str, action: Callable[[date, time, time], None]):
     day = retryable_input("Enter date (like YYYY-MM-DD)",
                           lambda date_str: datetime_parser.parse_date(date_str), 3)
     printer.print_success(day.strftime(prompt_prefix + " entry for %A, %d %B %Y"))
