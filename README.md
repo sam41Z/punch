@@ -16,40 +16,27 @@ Entrypoint: `punch.py`
 
 I recommend to setup an alias in your terminal config, e.g. `alias punch='$PUNCH_DIR/punch.py'`
 
-To get help:
+Without arguments the app launches in interactive mode. Available functions are:
+* __add__ time records
+* __remove__ previously added time records
+* get the breakdown of a specific week, referred to as __hours__
 
-```
-punch -h
-```
 
-To get help for a specific command:
-
-```
-punch COMMAND -h
-```
-
-## Examples
-
-Adding a log for today:
-
+### Commandline Arguments
+For quick access a few functions are available through a command line arguments.
+#### Adding records
+For today: 
 ```
 punch add 9-12
 ```
-
-Adding log for Tuesday this week:
-
+For any day in the week, using the prefix option `-p`
 ```
 punch add -p Tue 9-12
 ```
-
+#### Hours of current week
 Get logged hours of the current week and overtime:
 
 ```
 punch hours
 ```
 
-Remove last log of current week:
-
-```
-punch remove
-```
