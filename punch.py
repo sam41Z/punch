@@ -44,7 +44,10 @@ def add_args(args):
 if __name__ == '__main__':
     args = parse_args()
     if args.operation is None:
-        interactive_mode()
+        try:
+            interactive_mode()
+        except KeyboardInterrupt:
+            exit()
     elif args.operation == 'add':
         add_args(args)
     elif args.operation == 'hours':

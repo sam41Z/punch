@@ -3,8 +3,8 @@ from functools import reduce
 from typing import Sequence
 
 import math
-from rich import box, print
-from rich.console import Group
+from rich import box
+from rich.console import Group, Console
 from rich.panel import Panel
 from rich.progress import Progress, BarColumn, TaskProgressColumn
 from rich.style import Style
@@ -13,6 +13,7 @@ from rich.text import Text
 
 from model import TimeRecord
 
+console = Console()
 width = 50
 
 
@@ -27,7 +28,7 @@ def get_record_table(records: Sequence[TimeRecord]) -> Table:
 
 
 def print_record_table(records: Sequence[TimeRecord]):
-    print(get_record_table(records))
+    console.print(get_record_table(records))
 
 
 def print_weekly(records: Sequence[TimeRecord], required: timedelta, worked: timedelta, week_holidays, year, week):
@@ -46,8 +47,8 @@ def print_weekly(records: Sequence[TimeRecord], required: timedelta, worked: tim
                     Panel(progress, title="Progress", title_align="left", width=width, style="medium_purple1"),
                     Panel(holidays, width=width, style="gray62")
                     )
-    print()
-    print(Panel(summary, title=":stopwatch:  Hours for week {} in {}".format(week, year),
+    console.print()
+    console.print(Panel(summary, title=":stopwatch:  Hours for week {} in {}".format(week, year),
                 title_align="left", expand=False))
 
 
@@ -72,23 +73,23 @@ def print_overtime(weekly_overtime, year):
         weekly_ot,
         Panel(timedelta_string(total), title="Total Overtime", title_align="left", width=width, style="deep_sky_blue1"),
     )
-    print()
-    print(Panel(summary, title=":stopwatch:  Overtime from week {} to {} in {}".format(first_week, last_week, year),
+    console.print()
+    console.print(Panel(summary, title=":stopwatch:  Overtime from week {} to {} in {}".format(first_week, last_week, year),
                 title_align="left", expand=False))
 
 
 def print_with_selected(selected: Sequence[TimeRecord], records: Sequence[TimeRecord], title: str):
     entries = "\n".join(map(lambda r: r.str_record(), selected))
-    print( Panel(entries, title=title, width=width, title_align="left", style="spring_green1"))
-    print(get_record_table(records))
+    console.print( Panel(entries, title=title, width=width, title_align="left", style="spring_green1"))
+    console.print(get_record_table(records))
 
 
 def print_success(content: str):
-    print(Panel(content, width=width, title_align="left", style="spring_green1"))
+    console.print(Panel(content, width=width, title_align="left", style="spring_green1"))
 
 
 def print_error(content: str):
-    print(Panel(content, width=width, title_align="left", style="deep_pink2"))
+    console.print(Panel(content, width=width, title_align="left", style="deep_pink2"))
 
 
 def timedelta_string(delta) -> str:
