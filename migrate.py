@@ -1,8 +1,12 @@
+#!/usr/bin/env python
+
+import argparse
 import os
 from datetime import date, datetime, time
 from os.path import expanduser
 
 from model import TimeRecord
+from repository import Repository
 
 
 def get_file_path_by_yw(year, week):
@@ -47,3 +51,11 @@ class Migration:
                     record = TimeRecord.create(day, starts_at, ends_at)
                     self.repository.create_record(record)
                     print("Migrated: " + record.str_record())
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('year', type=int, choices=range(2021, 3000), metavar="2021+",
+                        help="Year (2021 or later)")
+    args = parser.parse_args()
+    Migration(Repository()).migrate(args.year)
