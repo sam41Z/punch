@@ -21,6 +21,7 @@ Without arguments the app launches in interactive mode. Available functions are:
 * __remove__ previously added time records
 * get the breakdown of a specific week, referred to as __hours__
 
+__Hint__: Letters in brackets, e.g. `[a]` can be used as shortcuts. 
 
 ### Commandline Arguments
 For quick access a few functions are available through a command line arguments.
