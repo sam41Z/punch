@@ -5,7 +5,7 @@ from datetime import date, datetime
 
 import printer
 from datetime_parser import parse_time_span
-from hours import hours
+from hours import hours_of_week
 from interactive import interactive_mode
 from timerecord import add
 
@@ -47,4 +47,4 @@ if __name__ == '__main__':
         add_args(args)
     elif args.operation == 'hours':
         today = date.today()
-        hours(today.year, today.isocalendar().week)
+        hours_of_week(today.year, today.isocalendar().week)

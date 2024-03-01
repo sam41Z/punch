@@ -26,17 +26,20 @@ def interactive_mode(cursor_index=0):
 
 
 def hours_prompt(back: Callable):
-    options = ["[t] this week", "[o] other week", None, "[b] back"]
+    options = ["[t] this week", "[o] other week", "[a] accumulated", None, "[b] back"]
     terminal_menu = TerminalMenu(options, title="Hours")
     index = terminal_menu.show()
     match index:
         case 0:
             today = date.today()
-            hours.hours(today.year, today.isocalendar().week)
+            hours.hours_of_week(today.year, today.isocalendar().week)
         case 1:
             year, week = week_prompt()
-            hours.hours(year, week)
-        case 3:
+            hours.hours_of_week(year, week)
+        case 2:
+            year, from_week, to_week = week_from_to_prompt()
+            hours.accumulated_hours(year, from_week, to_week)
+        case 4:
             back()
 
 
@@ -62,6 +65,17 @@ def week_prompt():
                            default=str(date.today().isocalendar().week)).isocalendar().week
     printer.print_success("Year {0}, week {1}".format(year, week))
     return year, week
+
+
+def week_from_to_prompt():
+    year = retryable_input("Enter year", lambda y: datetime_parser.parse_year(y), 3,
+                           default=str(date.today().year)).year
+    from_week = retryable_input("Enter start week number", lambda w: datetime_parser.parse_week(w, year), 3,
+                                default=str(1)).isocalendar().week
+    week_to = retryable_input("Enter start week number", lambda w: datetime_parser.parse_week(w, year), 3,
+                              default=str(date.today().isocalendar().week)).isocalendar().week
+    printer.print_success("Year {0}, from week {1} to {2}".format(year, from_week, week_to))
+    return year, from_week, week_to
 
 
 def week_delete_prompt(year: int, week: int):
